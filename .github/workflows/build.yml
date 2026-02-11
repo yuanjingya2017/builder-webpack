@@ -30,7 +30,7 @@ jobs:
 
       # 步骤 3：安装项目依赖
       - name: 安装依赖
-        run: npm install -D && cd ./test/smoke/template && npm install -D && cd ../../../
+        run: npm install -D && cd ./test/smoke/template && npm install -D --force && cd ../../../
 
       # 步骤 4：执行 Webpack 构建命令
       - name: 执行构建
