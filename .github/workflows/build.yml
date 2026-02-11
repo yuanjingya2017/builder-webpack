@@ -1,0 +1,37 @@
+# 工作流名称（在 GitHub Actions 页面显示）
+name: Webpack 自动构建
+
+# 触发条件：推送到 main/master 分支、提交 PR 到这些分支时触发
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+# 定义要执行的任务
+jobs:
+  # 任务名称：build（可自定义）
+  build:
+    # 运行环境：选择 Ubuntu 最新版（推荐，兼容大部分 Node.js 项目）
+    runs-on: ubuntu-latest
+
+    # 任务执行步骤
+    steps:
+      # 步骤 1：拉取仓库代码（必须第一步，GitHub 官方 action）
+      - name: 拉取代码
+        uses: actions/checkout@v4  # 使用 v4 版本（稳定版）
+
+      # 步骤 2：配置 Node.js 环境（适配你的项目 Node 版本）
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'  # 改为你项目实际使用的 Node 版本（如 14、18）
+          cache: 'npm'  # 缓存 npm 依赖，加速下次构建
+
+      # 步骤 3：安装项目依赖
+      - name: 安装依赖
+        run: npm install -D && cd ./test/smoke/template && npm install -D && cd ../../../
+
+      # 步骤 4：执行 Webpack 构建命令
+      - name: 执行构建
+        run: npm test  # 对应你 package.json 中的 build 脚本（如 "build": "webpack --mode production"）
